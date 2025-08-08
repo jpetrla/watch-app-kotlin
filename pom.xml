@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.3</version>
+        <version>3.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cz.jpetrla.cleevio</groupId>
@@ -15,8 +15,8 @@
     <description>watch-app-kotlin</description>
 
     <properties>
-        <java.version>11</java.version>
-        <kotlin.version>1.6.10</kotlin.version>
+        <java.version>21</java.version>
+        <kotlin.version>2.2.0</kotlin.version>
     </properties>
 
     <dependencies>
@@ -105,7 +105,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
+                        <include>**/*Test.kt</include>
                         <include>**/*Test.java</include>
+                        <include>**/*IT.kt</include>
                         <include>**/*IT.java</include>
                     </includes>
                 </configuration>
@@ -113,15 +115,43 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <configuration>
-                    <args>
-                        <arg>-Xjsr305=strict</arg>
-                    </args>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                        <plugin>jpa</plugin>
-                    </compilerPlugins>
-                </configuration>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <jvmTarget>21</jvmTarget>
+                            <args>
+                                <arg>-Xjsr305=strict</arg>
+                                <arg>-Xannotation-default-target=param-property</arg>
+                            </args>
+                            <compilerPlugins>
+                                <plugin>spring</plugin>
+                                <plugin>jpa</plugin>
+                            </compilerPlugins>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <jvmTarget>21</jvmTarget>
+                            <args>
+                                <arg>-Xjsr305=strict</arg>
+                                <arg>-Xannotation-default-target=param-property</arg>
+                            </args>
+                            <compilerPlugins>
+                                <plugin>spring</plugin>
+                                <plugin>jpa</plugin>
+                            </compilerPlugins>
+                        </configuration>
+                    </execution>
+                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>

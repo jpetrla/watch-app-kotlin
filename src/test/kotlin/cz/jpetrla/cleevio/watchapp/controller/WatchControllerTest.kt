@@ -18,10 +18,9 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 
-
 @WebMvcTest
 class WatchControllerTest(
-	@Autowired private val mockMvc: MockMvc
+	@param:Autowired private val mockMvc: MockMvc
 ) {
 
 	@MockkBean
@@ -60,7 +59,8 @@ class WatchControllerTest(
 	@Throws(IOException::class)
 	private fun readRequestContent(path: String): String {
 		val resource: Resource = ClassPathResource(path)
-		val file: File = resource.file
-		return String(Files.readAllBytes(file.toPath()))
+        resource.inputStream.use { input ->
+            return input.readBytes().toString(Charsets.UTF_8)
+        }
 	}
 }
