@@ -2,6 +2,7 @@ package cz.jpetrla.cleevio.watchapp.service
 
 import cz.jpetrla.cleevio.watchapp.model.Watch
 import cz.jpetrla.cleevio.watchapp.repository.WatchJpaRepository
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,6 +17,11 @@ class WatchServiceIT @Autowired constructor(
 	private val watchService: WatchService
 ) {
 
+    @AfterEach
+    fun tearDown() {
+        watchJpaRepository.deleteAll()
+    }
+
 	@Test
 	fun testUpload() {
 		val watch = Watch(
@@ -24,21 +30,17 @@ class WatchServiceIT @Autowired constructor(
 			"dummyDescription",
 		"dummyFountain".toByteArray())
 
-		var watchEntities = watchJpaRepository.findAll()
-		assertEquals(0, watchEntities.size)
+		assertEquals(0, watchJpaRepository.count())
 
 		watchService.upload(watch)
 
-		watchEntities = watchJpaRepository.findAll()
-		assertEquals(1, watchEntities.size)
+		assertEquals(1, watchJpaRepository.count())
 
-		val watchEntity = watchEntities.stream().findFirst().get()
+		val watchEntity = watchJpaRepository.findAll().single()
 		assertNotNull(watchEntity.id)
 		assertEquals(watch.title, watchEntity.title)
 		assertEquals(watch.price, watchEntity.price)
 		assertEquals(watch.description, watchEntity.description)
 		assertEquals(watch.fountain.size, watchEntity.fountain.size)
-
-		watchJpaRepository.deleteAll()
 	}
 }

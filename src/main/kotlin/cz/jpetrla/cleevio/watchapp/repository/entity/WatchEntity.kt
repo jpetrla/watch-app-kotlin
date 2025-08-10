@@ -1,28 +1,32 @@
 package cz.jpetrla.cleevio.watchapp.repository.entity
 
-import org.hibernate.annotations.Type
+import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.UuidGenerator
+import org.hibernate.type.SqlTypes
 import java.util.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "watch")
 class WatchEntity (
 
-	@Column(name = "title")
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false)
+    val id: UUID? = null,
+
+	@Column(name = "title", nullable = false)
 	var title: String,
 
-	@Column(name = "price")
+	@Column(name = "price", nullable = false)
 	var price: Int,
 
-	@Column(name = "description")
+	@Column(name = "description", nullable = false)
 	var description: String,
 
 	@Lob
-	@Type(type = "org.hibernate.type.BinaryType")
-	@Column(name = "fountain")
+    @JdbcTypeCode(SqlTypes.VARBINARY)
+	@Column(name = "fountain", nullable = false, columnDefinition = "VARBINARY")
 	var fountain: ByteArray
-) {
-	@Id
-	@Column(name = "id", updatable = false, nullable = false)
-	val id: UUID = UUID.randomUUID()
-}
+)

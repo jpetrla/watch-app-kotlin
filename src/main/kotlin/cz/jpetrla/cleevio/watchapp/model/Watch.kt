@@ -1,24 +1,24 @@
 package cz.jpetrla.cleevio.watchapp.model
 
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Positive
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Positive
 
 data class Watch (
 
 	@field:NotBlank
-	var title: String,
+	val title: String,
 
 	@field:NotNull
 	@field:Positive
-	var price: Int,
+    val price: Int,
 
 	@field:NotBlank
-	var description: String,
+    val description: String,
 
 	@field:NotEmpty
-	var fountain: ByteArray
+    val fountain: ByteArray
 ) {
 
 	override fun equals(other: Any?): Boolean {
