@@ -54,6 +54,105 @@ class WatchControllerTest(
 		verify(exactly = 1) { watchService.upload(any()) }
 	}
 
+	@Test
+	fun testUpload_UnsupportedMediaType() {
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.TEXT_PLAIN_VALUE)
+			.content(""))
+			.andDo(print())
+			.andExpect(status().isUnsupportedMediaType)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_missingContent() {
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_emptyJson() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-empty.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_nullValues() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-null_values.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_emptyValues() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-empty_values.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_ZeroPrice() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-zero_price.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_InvalidPrice() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-invalid_price.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
+	@Test
+	fun testUpload_badRequest_invalidBase64() {
+		val content = readRequestContent("WatchControllerTest/upload-bad_request-invalid_base64.json")
+
+		mockMvc.perform(post("/api/v1/watch")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(content))
+			.andDo(print())
+			.andExpect(status().isBadRequest)
+
+		verify(exactly = 0) { watchService.upload(any()) }
+	}
+
 	@Throws(IOException::class)
 	private fun readRequestContent(path: String): String {
 		val resource: Resource = ClassPathResource(path)
